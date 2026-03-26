@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanaSnake", "KanaSnake.csproj", "{7C2E2EA1-FC5A-2C4F-60B0-0293A61C04A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanaSnake_0byfsamy_wpftmp", "KanaSnake_0byfsamy_wpftmp.csproj", "{8DA935DA-C1CB-1F0B-D555-DD25DA9BE3BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C2E2EA1-FC5A-2C4F-60B0-0293A61C04A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C2E2EA1-FC5A-2C4F-60B0-0293A61C04A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C2E2EA1-FC5A-2C4F-60B0-0293A61C04A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C2E2EA1-FC5A-2C4F-60B0-0293A61C04A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DA935DA-C1CB-1F0B-D555-DD25DA9BE3BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DA935DA-C1CB-1F0B-D555-DD25DA9BE3BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DA935DA-C1CB-1F0B-D555-DD25DA9BE3BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DA935DA-C1CB-1F0B-D555-DD25DA9BE3BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A75741C-6509-4FC7-956A-67F7C78FEE00}
+	EndGlobalSection
+EndGlobal
