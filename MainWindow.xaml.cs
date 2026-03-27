@@ -114,9 +114,31 @@ public partial class MainWindow : Window
             case "Right": newHead.X += 20; break;
         }
 
+        KanaPair? eatenKana = _onScreenKanas.FirstOrDefault(k => k.X == newHead.X && k.Y == newHead.Y);
+
+        if(eatenKana != null)
+        {
+            if(eatenKana.Romaji == _targetKana?.Romaji)
+            {
+                _onScreenKanas.Remove(eatenKana);
+
+                _targetKana = _kanaManager.GetRandomKana();
+                TargetText.Text = _targetKana.Romaji;
+                SpawnKanas();
+
+                _snake.Insert(0, newHead);
+                return;
+            }
+            else
+            {
+                GameOverKana();
+                return;
+            }
+        }
+
         if(newHead.X < 0 || newHead.X >= 400 || newHead.Y < 0 || newHead.Y >= 400)
         {
-            GameOver();
+            GameOverWall();
             return;            
         }
 
@@ -164,11 +186,19 @@ public partial class MainWindow : Window
     //updating goal kana
 
 
-    //gameover
-    private void GameOver()
+    //gameover if you crashed in the wall
+    private void GameOverWall()
     {
         _gameTimer.Stop();
         MessageBox.Show("Oh! You crashed!");
+        StartGame();
+    }
+
+    //gameover if you eaten wrong kana
+    private void GameOverKana()
+    {
+        _gameTimer.Stop();
+        MessageBox.Show("Wrong kana!!");
         StartGame();
     }
 }
