@@ -41,7 +41,7 @@ public partial class MainWindow : Window
         _gameTimer.Tick -= GameTick;
         _gameTimer.Tick += GameTick;
         _gameTimer.Start(); 
-        
+
         DrawSnake();
     }
 
@@ -91,6 +91,12 @@ public partial class MainWindow : Window
             case "Right": newHead.X += 20; break;
         }
 
+        if(newHead.X < 0 || newHead.X >= 400 || newHead.Y < 0 || newHead.Y >= 400)
+        {
+            GameOver();
+            return;            
+        }
+
         _snake.Insert(0, newHead);
         _snake.RemoveAt(_snake.Count - 1);
     }
@@ -111,4 +117,13 @@ public partial class MainWindow : Window
 
 
     //updating goal kana
+
+
+    //gameover
+    private void GameOver()
+    {
+        _gameTimer.Stop();
+        MessageBox.Show("Oh! You crashed!");
+        StartGame();
+    }
 }
