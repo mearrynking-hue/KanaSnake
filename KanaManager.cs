@@ -9,6 +9,9 @@ public class KanaPair
     public string Romaji{get; set;}
     public string Kana {get; set;}
 
+    public double X{get; set;}
+    public double Y{get; set;}
+
     public KanaPair(string romaji, string kana)
     {
         Romaji = romaji;

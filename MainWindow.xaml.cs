@@ -20,11 +20,14 @@ public partial class MainWindow : Window
     private List<Snake> _snake = new List<Snake>();
     private KanaPair? _targetKana;
     private string _direction = "Right";
+    private List<KanaPair> _onScreenKanas = new List<KanaPair>();
+    private Random _random = new Random();
 
     public MainWindow()
     {
         InitializeComponent();
         this.KeyDown += OnKeyDown;
+
         StartGame();
     }
 
@@ -37,19 +40,24 @@ public partial class MainWindow : Window
         _targetKana = _kanaManager.GetRandomKana();
         TargetText.Text = _targetKana.Romaji;
 
+        _targetKana = _kanaManager.GetRandomKana();
+        TargetText.Text = _targetKana.Romaji;
+
         _gameTimer.Interval = TimeSpan.FromMilliseconds(150);
         _gameTimer.Tick -= GameTick;
         _gameTimer.Tick += GameTick;
         _gameTimer.Start(); 
 
+        SpawnKanas();
         DrawSnake();
     }
 
-    //drawing snake
+    //drawing snake and kanas
     private void DrawSnake()
     {
         GameCanvas.Children.Clear();
 
+        //drawing snake
         foreach(Snake part in _snake)
         {
             Rectangle rect = new Rectangle
@@ -65,6 +73,21 @@ public partial class MainWindow : Window
             Canvas.SetTop(rect, part.Y);
 
             GameCanvas.Children.Add(rect);
+        }
+
+        //drawing kana
+        foreach(var kana in _onScreenKanas)
+        {
+            TextBlock textBlock = new TextBlock
+            {
+                Text = kana.Kana,
+                FontSize = 18,
+                Foreground = Brushes.White
+            };
+
+            Canvas.SetLeft(textBlock, kana.X + 2);
+            Canvas.SetTop(textBlock, kana.Y);
+            GameCanvas.Children.Add(textBlock);
         }
     }
 
@@ -114,7 +137,29 @@ public partial class MainWindow : Window
     }
     
     //spawning kana
+    private void SpawnKanas()
+    {
+        _onScreenKanas.Clear();
 
+        if(_targetKana != null)
+        {
+            _targetKana.X = _random.Next(0,20)*20;
+            _targetKana.Y = _random.Next(0,20)*20;
+            _onScreenKanas.Add(_targetKana);
+        }
+
+        for(int i=0; i<3; i++)
+        {
+            KanaPair fake = _kanaManager.GetRandomKana();
+
+            if(fake.Romaji != _targetKana?.Romaji)
+            {
+                fake.X = _random.Next(0,20)*20;
+                fake.Y = _random.Next(0,20)*20;
+                _onScreenKanas.Add(fake);
+            }
+        }
+    }
 
     //updating goal kana
 
