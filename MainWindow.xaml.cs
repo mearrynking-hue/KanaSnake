@@ -1,13 +1,7 @@
-﻿using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
@@ -42,6 +36,7 @@ public partial class MainWindow : Window
         ScoreText.Text = "0";
         _lives = 3;
         UpdateLivesDisplay();
+        GameOverOverlay.Visibility = Visibility.Collapsed;
 
         _snake.Clear();
         _snake.Add(new Snake(90, 90));
@@ -267,7 +262,14 @@ public partial class MainWindow : Window
     private void GameOver(string message)
     {
         _gameTimer.Stop();
-        MessageBox.Show(message);
+        GameOverMessage.Text = message;
+        GameOverOverlay.Visibility = Visibility.Visible;
+    }
+
+    //restart game button
+    private void RestartButton(object sender, RoutedEventArgs e)
+    {
+        GameOverOverlay.Visibility = Visibility.Collapsed;
         StartGame();
     }
 }
