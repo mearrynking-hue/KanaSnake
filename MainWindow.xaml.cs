@@ -22,6 +22,8 @@ public partial class MainWindow : Window
     private string _direction = "Right";
     private List<KanaPair> _onScreenKanas = new List<KanaPair>();
     private Random _random = new Random();
+    private int _score = 0;
+    private string _lastRomaji = "";
 
     public MainWindow()
     {
@@ -34,10 +36,14 @@ public partial class MainWindow : Window
     //starting game
     private void StartGame()
     {
+        _score = 0;
+        ScoreText.Text = "0";
+
         _snake.Clear();
         _snake.Add(new Snake(90, 90));
 
         _targetKana = _kanaManager.GetRandomKana();
+        _lastRomaji = _targetKana.Romaji;
         TargetText.Text = _targetKana.Romaji;
 
         _gameTimer.Interval = TimeSpan.FromMilliseconds(150);
@@ -80,12 +86,15 @@ public partial class MainWindow : Window
             TextBlock textBlock = new TextBlock
             {
                 Text = kana.Kana,
-                FontSize = 30,
-                Foreground = Brushes.White
+                FontSize = 26,
+                Foreground = Brushes.White,
+                Width = 30,
+                Height = 30,
+                TextAlignment = TextAlignment.Center
             };
 
-            Canvas.SetLeft(textBlock, kana.X +2);
-            Canvas.SetTop(textBlock, kana.Y -2);
+            Canvas.SetLeft(textBlock, kana.X);
+            Canvas.SetTop(textBlock, kana.Y - 4);
             GameCanvas.Children.Add(textBlock);
         }
     }
@@ -136,7 +145,18 @@ public partial class MainWindow : Window
             {
                 _onScreenKanas.Remove(eatenKana);
 
-                _targetKana = _kanaManager.GetRandomKana();
+                _score++;
+                ScoreText.Text = _score.ToString();
+
+                KanaPair nextKana;
+                do
+                {
+                    nextKana = _kanaManager.GetRandomKana();
+                }while(nextKana.Romaji == _lastRomaji);
+
+                _targetKana = nextKana;
+                _lastRomaji = _targetKana.Romaji;
+
                 TargetText.Text = _targetKana.Romaji;
                 SpawnKanas();
 
@@ -171,28 +191,58 @@ public partial class MainWindow : Window
     {
         _onScreenKanas.Clear();
 
+        //spawning kana
         if(_targetKana != null)
         {
-            _targetKana.X = _random.Next(0,14)*30;
-            _targetKana.Y = _random.Next(0,14)*30;
+            SetRandomPosition(_targetKana);
             _onScreenKanas.Add(_targetKana);
         }
 
-        for(int i=0; i<3; i++)
+        int totalKanasCount = _random.Next(3, 5);
+
+        //spawning fake kana
+        while(_onScreenKanas.Count < totalKanasCount)
         {
             KanaPair fake = _kanaManager.GetRandomKana();
 
-            if(fake.Romaji != _targetKana?.Romaji)
+            bool isDublicateText = _onScreenKanas.Any(k => k.Romaji == fake.Romaji);
+
+            if(!isDublicateText)
             {
-                fake.X = _random.Next(0,14)*30;
-                fake.Y = _random.Next(0,14)*30;
+                SetRandomPosition(fake);
                 _onScreenKanas.Add(fake);
             }
         }
     }
 
-    //updating goal kana
+    //method which helps to find free place for kana
+    private void SetRandomPosition(KanaPair kana)
+    {
+        bool isPositionOccupied;
+        int newX, newY;
 
+        do
+        {
+            isPositionOccupied = false;
+
+            newX = _random.Next(0, 14) * 30;
+            newY = _random.Next(0, 14) * 30;
+
+            if(_onScreenKanas.Any(k => k.X == newX && k.Y == newY))
+            {
+                isPositionOccupied = true;
+            }
+
+            if(_snake.Any(s => s.X == newX && s.Y == newY))
+            {
+                isPositionOccupied = true;
+            }
+
+        } while(isPositionOccupied);
+
+        kana.X = newX;
+        kana.Y = newY;
+    }
 
     //gameover if you crashed in the wall
     private void GameOverWall()

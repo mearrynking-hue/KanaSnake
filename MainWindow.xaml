@@ -7,18 +7,39 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
     <Grid Background="#1c1514">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            
+            <Grid Width="420" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/> 
+                    <ColumnDefinition Width="Auto"/> 
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <TextBlock Name="TargetText" Grid.Row = "0" FontSize="30" 
-                HorizontalAlignment="Center" Margin="10" Foreground="White"/>
+                <TextBlock Name="TargetText" 
+                        Grid.Column="1"
+                        FontSize="48" 
+                        Foreground="White" 
+                        FontWeight="Bold" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"/>
 
-        <Canvas Name="GameCanvas" Grid.Row="1" 
-        Width="420" Height="420" 
-        Background="#69ad63" 
-        HorizontalAlignment="Center" VerticalAlignment="Center"
-        Margin="0,0,0,60"/>
+                <TextBlock Name="ScoreText" 
+                        Grid.Column="2"
+                        Text="0" 
+                        FontSize="36" 
+                        Foreground="#FFD700" 
+                        FontWeight="Bold" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Center"/>
+            </Grid>
+
+            <Canvas Name="GameCanvas" Grid.Row="1" 
+                Width="420" Height="420" 
+                Background="#69ad63" 
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                Margin="0,0,0,60"/>
+                    
+        </StackPanel>
     </Grid>
 </Window>
