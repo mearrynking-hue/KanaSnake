@@ -35,15 +35,14 @@ public partial class MainWindow : Window
     private void StartGame()
     {
         _snake.Clear();
-        _snake.Add(new Snake(100, 100));
-
-        _targetKana = _kanaManager.GetRandomKana();
-        TargetText.Text = _targetKana.Romaji;
+        _snake.Add(new Snake(90, 90));
 
         _targetKana = _kanaManager.GetRandomKana();
         TargetText.Text = _targetKana.Romaji;
 
         _gameTimer.Interval = TimeSpan.FromMilliseconds(150);
+        
+        _gameTimer.Stop();
         _gameTimer.Tick -= GameTick;
         _gameTimer.Tick += GameTick;
         _gameTimer.Start(); 
@@ -62,8 +61,8 @@ public partial class MainWindow : Window
         {
             Rectangle rect = new Rectangle
             {
-                Width = 20,
-                Height = 20,
+                Width = 30,
+                Height = 30,
                 Fill = Brushes.Coral,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1
@@ -81,12 +80,12 @@ public partial class MainWindow : Window
             TextBlock textBlock = new TextBlock
             {
                 Text = kana.Kana,
-                FontSize = 18,
+                FontSize = 30,
                 Foreground = Brushes.White
             };
 
-            Canvas.SetLeft(textBlock, kana.X + 2);
-            Canvas.SetTop(textBlock, kana.Y);
+            Canvas.SetLeft(textBlock, kana.X +2);
+            Canvas.SetTop(textBlock, kana.Y -2);
             GameCanvas.Children.Add(textBlock);
         }
     }
@@ -108,14 +107,29 @@ public partial class MainWindow : Window
 
         switch(_direction)
         {
-            case "Up": newHead.Y -= 20; break;
-            case "Down": newHead.Y += 20; break;
-            case "Left": newHead.X -= 20; break;
-            case "Right": newHead.X += 20; break;
+            case "Up": newHead.Y -= 30; break;
+            case "Down": newHead.Y += 30; break;
+            case "Left": newHead.X -= 30; break;
+            case "Right": newHead.X += 30; break;
         }
 
         KanaPair? eatenKana = _onScreenKanas.FirstOrDefault(k => k.X == newHead.X && k.Y == newHead.Y);
+        
+        //check if we crashed into the wall
+        if(newHead.X < 0 || newHead.X > 390 || newHead.Y < 0 || newHead.Y > 390)
+                {
+                    GameOverWall();
+                    return;            
+                }
 
+        //check if we crashed into snake tail
+        if(_snake.Any(s => s.X == newHead.X && s.Y == newHead.Y))
+        {
+            GameOverSelf();
+            return;
+        }
+
+        //check if we eaten right kana
         if(eatenKana != null)
         {
             if(eatenKana.Romaji == _targetKana?.Romaji)
@@ -134,12 +148,6 @@ public partial class MainWindow : Window
                 GameOverKana();
                 return;
             }
-        }
-
-        if(newHead.X < 0 || newHead.X >= 400 || newHead.Y < 0 || newHead.Y >= 400)
-        {
-            GameOverWall();
-            return;            
         }
 
         _snake.Insert(0, newHead);
@@ -165,8 +173,8 @@ public partial class MainWindow : Window
 
         if(_targetKana != null)
         {
-            _targetKana.X = _random.Next(0,20)*20;
-            _targetKana.Y = _random.Next(0,20)*20;
+            _targetKana.X = _random.Next(0,14)*30;
+            _targetKana.Y = _random.Next(0,14)*30;
             _onScreenKanas.Add(_targetKana);
         }
 
@@ -176,8 +184,8 @@ public partial class MainWindow : Window
 
             if(fake.Romaji != _targetKana?.Romaji)
             {
-                fake.X = _random.Next(0,20)*20;
-                fake.Y = _random.Next(0,20)*20;
+                fake.X = _random.Next(0,14)*30;
+                fake.Y = _random.Next(0,14)*30;
                 _onScreenKanas.Add(fake);
             }
         }
@@ -199,6 +207,14 @@ public partial class MainWindow : Window
     {
         _gameTimer.Stop();
         MessageBox.Show("Wrong kana!!");
+        StartGame();
+    }
+
+    //gameover if you crashe into yourself
+    private void GameOverSelf()
+    {
+        _gameTimer.Stop();
+        MessageBox.Show("Oh! Don't try to eat your tail!");
         StartGame();
     }
 }
