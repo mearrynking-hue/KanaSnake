@@ -16,22 +16,30 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
+                <TextBlock Name="LivesText" 
+                    Grid.Column="0" 
+                    Text="❤❤❤" 
+                    FontSize="24" 
+                    Foreground="#FF4B4B" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center"/>
+
                 <TextBlock Name="TargetText" 
-                        Grid.Column="1"
-                        FontSize="48" 
-                        Foreground="White" 
-                        FontWeight="Bold" 
-                        HorizontalAlignment="Center" 
-                        VerticalAlignment="Center"/>
+                    Grid.Column="1"
+                    FontSize="48" 
+                    Foreground="White" 
+                    FontWeight="Bold" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"/>
 
                 <TextBlock Name="ScoreText" 
-                        Grid.Column="2"
-                        Text="0" 
-                        FontSize="36" 
-                        Foreground="#FFD700" 
-                        FontWeight="Bold" 
-                        HorizontalAlignment="Right" 
-                        VerticalAlignment="Center"/>
+                    Grid.Column="2"
+                    Text="0" 
+                    FontSize="36" 
+                    Foreground="#FFD700" 
+                    FontWeight="Bold" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center"/>
             </Grid>
 
             <Canvas Name="GameCanvas" Grid.Row="1" 

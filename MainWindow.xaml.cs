@@ -22,8 +22,10 @@ public partial class MainWindow : Window
     private string _direction = "Right";
     private List<KanaPair> _onScreenKanas = new List<KanaPair>();
     private Random _random = new Random();
+    private DispatcherTimer _gameTimer = new DispatcherTimer();
     private int _score = 0;
     private string _lastRomaji = "";
+    private int _lives = 3;
 
     public MainWindow()
     {
@@ -38,6 +40,8 @@ public partial class MainWindow : Window
     {
         _score = 0;
         ScoreText.Text = "0";
+        _lives = 3;
+        UpdateLivesDisplay();
 
         _snake.Clear();
         _snake.Add(new Snake(90, 90));
@@ -55,6 +59,12 @@ public partial class MainWindow : Window
 
         SpawnKanas();
         DrawSnake();
+    }
+
+    //lives display update
+    private void UpdateLivesDisplay()
+    {
+        LivesText.Text = new string('❤', _lives);
     }
 
     //drawing snake and kanas
@@ -100,8 +110,6 @@ public partial class MainWindow : Window
     }
 
     //timer
-    private DispatcherTimer _gameTimer = new DispatcherTimer();
-
     private void GameTick(object? sender, EventArgs e)
     {
         Move();
@@ -127,14 +135,14 @@ public partial class MainWindow : Window
         //check if we crashed into the wall
         if(newHead.X < 0 || newHead.X > 390 || newHead.Y < 0 || newHead.Y > 390)
                 {
-                    GameOverWall();
+                    GameOver("Oh! You crashed!");
                     return;            
                 }
 
         //check if we crashed into snake tail
         if(_snake.Any(s => s.X == newHead.X && s.Y == newHead.Y))
         {
-            GameOverSelf();
+            GameOver("Oh! Don't try to eat your tail!");
             return;
         }
 
@@ -165,7 +173,18 @@ public partial class MainWindow : Window
             }
             else
             {
-                GameOverKana();
+                _lives--;
+                UpdateLivesDisplay();
+
+                if(_lives <= 0)
+                {
+                    GameOver("You out of lives!");
+                }
+                else
+                {
+                    _onScreenKanas.Remove(eatenKana);
+                    SpawnKanas();
+                }
                 return;
             }
         }
@@ -174,7 +193,7 @@ public partial class MainWindow : Window
         _snake.RemoveAt(_snake.Count - 1);
     }
 
-    //control(WASD)
+    //controls(WASD)
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
         switch(e.Key)
@@ -244,27 +263,11 @@ public partial class MainWindow : Window
         kana.Y = newY;
     }
 
-    //gameover if you crashed in the wall
-    private void GameOverWall()
+    //gameover message
+    private void GameOver(string message)
     {
         _gameTimer.Stop();
-        MessageBox.Show("Oh! You crashed!");
-        StartGame();
-    }
-
-    //gameover if you eaten wrong kana
-    private void GameOverKana()
-    {
-        _gameTimer.Stop();
-        MessageBox.Show("Wrong kana!!");
-        StartGame();
-    }
-
-    //gameover if you crashe into yourself
-    private void GameOverSelf()
-    {
-        _gameTimer.Stop();
-        MessageBox.Show("Oh! Don't try to eat your tail!");
+        MessageBox.Show(message);
         StartGame();
     }
 }
